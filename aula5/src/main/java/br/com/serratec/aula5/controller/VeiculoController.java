@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.serratec.aula5.model.Veiculo;
 import br.com.serratec.aula5.repository.VeiculoRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
@@ -25,6 +30,17 @@ import jakarta.validation.Valid;
 public class VeiculoController {
     @Autowired
     private VeiculoRepository repository;
+
+
+    @Operation(summary = "Inserir um veículo", description = "A resposta retorna dados do veículo")
+	@ApiResponses(value = { 
+			@ApiResponse(responseCode = "201", 
+			content = {@Content(schema = @Schema(implementation = Veiculo.class), mediaType = "application/json")},
+			description = "Cadastra veículo"),
+			@ApiResponse(responseCode = "401", description = "Erro de autenticação"),
+			@ApiResponse(responseCode = "403", description = "Não há permissão para acessar o recurso"),
+			@ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+			@ApiResponse(responseCode = "505", description = "Exceção interna da aplicação") })
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -50,6 +66,17 @@ public class VeiculoController {
         return ResponseEntity.notFound().build();
     }
 
+
+@Operation(summary = "Lista todos os clientes", description = "A resposta lista os dados dos clientes id, nome, cpf e email.")
+	@ApiResponses(value = { 
+			@ApiResponse(responseCode = "200", 
+			content = {@Content(schema = @Schema(implementation = Veiculo.class), mediaType = "application/json")},
+			description = "Retorna todos os veículos"),
+			@ApiResponse(responseCode = "401", description = "Erro de autenticação"),
+			@ApiResponse(responseCode = "403", description = "Não há permissão para acessar o recurso"),
+			@ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+			@ApiResponse(responseCode = "505", description = "Exceção interna da aplicação") })
+    
     @GetMapping
     public ResponseEntity<List<Veiculo>> listar() {
         return ResponseEntity.ok(repository.findAll());

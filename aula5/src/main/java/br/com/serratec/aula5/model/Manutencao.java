@@ -1,6 +1,8 @@
 package br.com.serratec.aula5.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -9,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
@@ -26,6 +30,15 @@ public class Manutencao {
     @ManyToOne
     @JoinColumn(name = "id_veiculo")
     private Veiculo veiculo;
+
+
+    @ManyToMany
+    @JoinTable(name = "manutencao_servico",
+               joinColumns = @JoinColumn(name="id_manutencao"),
+               inverseJoinColumns = @JoinColumn(name="id_servico")
+    )
+    private List<Servico> servicos = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -66,6 +79,10 @@ public class Manutencao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<Servico> getServicos() {
+        return servicos;
     }
 
     
