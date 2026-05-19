@@ -1,5 +1,6 @@
 package br.com.serratec.api.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,32 +12,38 @@ import br.com.serratec.api.dto.UsuarioRequestDTO;
 import br.com.serratec.api.dto.UsuarioResponseDTO;
 import br.com.serratec.api.exception.UsuarioException;
 import br.com.serratec.api.model.Usuario;
+import br.com.serratec.api.model.UsuarioPerfil;
+import br.com.serratec.api.repository.PerfilRepository;
+import br.com.serratec.api.repository.UsuarioPerfilRepository;
 import br.com.serratec.api.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
     @Autowired
+    private PerfilService perfilService;
+
+    @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private UsuarioPerfilRepository usuarioPerfilRepository;
+
 
     @Autowired
     private BCryptPasswordEncoder criptografar;
 
+    UsuarioService(PerfilService perfilService) {
+        this.perfilService = perfilService;
+    }
+
     public List<UsuarioResponseDTO> listarTodos() {
-
-        // List<Usuario> usuarios = repository.findAll();
-        // List<UsuarioResponseDTO> dto = new ArrayList<>();
-
-        // for (Usuario usuario : usuarios) {
-        // dto.add(new UsuarioResponseDTO(usuario.getId(), usuario.getNome(),
-        // usuario.getEmail()));
-        // }
-        // return dto;
-
         return repository.findAll().stream()
                 .map(usuario -> new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public UsuarioResponseDTO inserir(UsuarioRequestDTO dto) {
         Usuario usuarioBanco = repository.findByEmail(dto.getEmail());
 
@@ -48,8 +55,16 @@ public class UsuarioService {
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(criptografar.encode(dto.getSenha()));
-
         Usuario usuarioSalvo = repository.save(usuario);
+
+        for (UsuarioPerfil up : dto.getUsuarioPerfis()) {
+            up.setUsuario(usuarioSalvo);
+            up.setPerfil(perfilService.buscar(up.getPerfil().getId()).get());
+            up.setDataCriacao(LocalDate.now());
+            up.setAtivo(true);
+        }
+        usuarioPerfilRepository.saveAll(dto.getUsuarioPerfis());
+
         return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
     }
 }
