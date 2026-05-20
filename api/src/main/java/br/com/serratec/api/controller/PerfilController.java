@@ -33,6 +33,19 @@ public class PerfilController {
     @GetMapping("{id}")
     public ResponseEntity<Perfil> buscar(@PathVariable Long id) {
         Optional<Perfil> perfil = service.buscar(id);
+
+        String nome = null;
+        if (nome != null) {
+            System.out.println("foi");
+        }    
+
+        Optional<String> nome2 = null;
+        // if (nome2.isPresent()) {
+        //     System.out.println("foi");
+        // }
+
+        nome2.ifPresent(n->System.out.println(n));
+
         if (perfil.isPresent()) {
             return ResponseEntity.ok(perfil.get());
         }

@@ -29,7 +29,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioPerfilRepository usuarioPerfilRepository;
 
-
     @Autowired
     private BCryptPasswordEncoder criptografar;
 
@@ -63,6 +62,13 @@ public class UsuarioService {
             up.setDataCriacao(LocalDate.now());
             up.setAtivo(true);
         }
+
+        // List<UsuarioPerfil> lista = dto.getUsuarioPerfis().stream().map(up -> new
+        // UsuarioPerfil(usuarioSalvo,
+        // perfilService.buscar(up.getPerfil().getId()).get(),
+        // LocalDate.now(), true) {
+        // }).collect(Collectors.toList());
+
         usuarioPerfilRepository.saveAll(dto.getUsuarioPerfis());
 
         return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
