@@ -61,4 +61,10 @@ public class Usuario {
         return usuarioPerfis;
     }
 
+    @Override
+    public String toString() {
+        return " Nome:" + nome +"\n Email:" + email;
+    }
+
+    
 }
