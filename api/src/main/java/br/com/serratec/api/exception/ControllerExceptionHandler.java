@@ -49,4 +49,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(EnderecoException.class)
+    protected @Nullable ResponseEntity<Object> handleEnderecoException(EnderecoException ex) {
+        ErroResposta er = new ErroResposta(HttpStatus.NOT_FOUND.value(), "Existem erros! " + ex.getMessage(),
+                LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(er);
+
+    }
+
 }
