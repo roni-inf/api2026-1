@@ -75,7 +75,7 @@ public class UsuarioService {
 
         usuarioPerfilRepository.saveAll(dto.getUsuarioPerfis());
         
-        config.sendEmail(dto.getEmail(), "Cadastro de novo usuário", usuarioSalvo.toString());
+       // config.sendEmail(dto.getEmail(), "Cadastro de novo usuário", usuarioSalvo.toString());
 
         return new UsuarioResponseDTO(usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
     }

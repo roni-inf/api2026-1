@@ -2,6 +2,7 @@ package br.com.serratec.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ public class EnderecoController {
 
     @Autowired
     private EnderecoService service;
+
 
     @GetMapping("{cep}")
     public ResponseEntity<EnderecoResponseDTO> buscar(@PathVariable String cep) {
